@@ -49,17 +49,17 @@ void chip_reload_rom(Chip8 *chip)
 	u8 *start = (((u8*)chip) + CHIP_8_PERM_SIZE);
 	memset(start, 0, sizeof(Chip8) - CHIP_8_PERM_SIZE);
 	srand(time(0));
-	chip->status = ChipStatus_Off;
+	chip->status = ChipStatus_Cold;
 }
 
-void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
+void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, Input *input, f32 delta)
 {
 	switch(chip->status)
 	{
 		default: {INVALID_CODE_PATH();}break;
-		case ChipStatus_Null:{}break;
+		case ChipStatus_Off:{}break;
 		
-		case ChipStatus_Off:
+		case ChipStatus_Cold:
 		{
 			chip->inst_per_step = 1;
 			
@@ -324,7 +324,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 					
 					case 0xB000:
 					{
-						chip->pc = chip->reg[0x0] + opcode & 0x0FFF;
+						chip->pc = chip->reg[0x0] + (opcode & 0x0FFF);
 					}break;
 					
 					// rnd
@@ -373,7 +373,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 						{
 							u8 key = *chip_get_vx(chip);
 							
-							if(is_chip_key_down(g_input, key))
+							if(is_chip_key_down(input, key))
 							{
 								chip->pc += 2;
 							}
@@ -383,7 +383,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 						else if((opcode & 0x00F0) == 0x00A0)
 						{
 							u8 key = *chip_get_vx(chip);
-							if(!is_chip_key_down(g_input, key))
+							if(!is_chip_key_down(input, key))
 							{
 								chip->pc += 2;
 							}
@@ -413,7 +413,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 								
 								for(u32 i = 0; i < 16; i++)
 								{
-									if(is_chip_key_down(g_input, i))
+									if(is_chip_key_down(input, i))
 									{
 										*chip_get_vx(chip) = i; 
 										chip->pc += 2;
@@ -537,25 +537,23 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 		{
 			u8 *start = (((u8*)chip) + CHIP_8_PERM_SIZE);
 			memset(start, 0, sizeof(Chip8) - CHIP_8_PERM_SIZE);
+            memset(chip->rom_path, 0, 256);
 			mem_cpy(chip->rom_path, chip->dialog_data.path.c, chip->dialog_data.path.len);
 			srand(time(0));
-			chip->status = ChipStatus_Off;
+			chip->status = ChipStatus_Cold;
 		}
 
 		chip->dialog_data.completed = 0;
 	}
 	
-	ui_begin(cxt);
-	
-	ui_push_fixed_pos(cxt, v2f{{-1.3, 0.9}});
-	ui_push_text_color(cxt, CHIP8_COLOR_TEXT);
-	ui_colf(cxt, "col")
+	ui_text_color(cxt, CHIP8_COLOR_TEXT)
+    ui_fixed_pos(cxt, (v2f{{-1.3, 0.9}}))
+	ui_colf(cxt, "chip8 parent")
 	{
 		ui_push_size_kind(cxt, UI_SizeKind_TextContent);
 		
-		if(ui_labelf(cxt, "Load Rom").hot)
+		if(ui_labelf(cxt, "Load Rom").active)
 		{
-			printf("hot\n");
 			os_open_file_dialog(&chip->dialog_data);
 		}
 		
@@ -569,7 +567,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 			chip->inst_per_step = 1;
 		}
 		
-		ui_rowf(cxt, "row")
+		ui_rowf(cxt, "ips parent")
 		{
 			if(ui_labelf(cxt, "inc").active)
 			{
@@ -585,8 +583,5 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 		
 		ui_pop_size_kind(cxt);
 	}
-	
-	ui_pop_text_color(cxt);
-	ui_pop_fixed_pos(cxt);
-	ui_end(cxt);
+
 }

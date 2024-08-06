@@ -24,6 +24,3 @@ art.txt
 
 *.sh
 !build.sh
-
-// per project
-roms/

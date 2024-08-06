@@ -11,8 +11,8 @@ struct R_SDL_state
 
 global R_SDL_state r_sdl_state;
 
-internal void r_sdl_innit(SDL_Window *win);
-internal R_Handle r_sdl_alloc_texture(void *data, i32 w, i32 h, i32 n, R_Texture_params *p);
-internal void r_sdl_submit(R_Pass_list *list, v2i win_size);
+function void r_sdl_innit(SDL_Window *win);
+function R_Handle r_sdl_alloc_texture(void *data, i32 w, i32 h, i32 n, R_Texture_params *p);
+function void r_sdl_submit(R_Pass_list *list, v2i win_size);
 
 #endif //RENDER_SDL_H

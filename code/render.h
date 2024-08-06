@@ -10,25 +10,25 @@ struct R_Handle
 
 enum R_TEXTURE_FILTER
 {
-  R_TEXTURE_FILTER_NEAREST,
-  R_TEXTURE_FILTER_LINEAR,
+	R_TEXTURE_FILTER_NEAREST,
+	R_TEXTURE_FILTER_LINEAR,
 	R_TEXTURE_FILTER_COUNT
 };
 
 enum R_TEXTURE_WRAP
 {
-  R_TEXTURE_WRAP_CLAMP_TO_BORDER,
-  R_TEXTURE_WRAP_REPEAT,
+	R_TEXTURE_WRAP_CLAMP_TO_BORDER,
+	R_TEXTURE_WRAP_REPEAT,
 	R_TEXTURE_WRAP_COUNT
 };
 
 enum R_POLYGON_MODE
 {
-  R_POLYGON_MODE_UNINITIALIZED,
-  R_POLYGON_MODE_POINT,
-  R_POLYGON_MODE_LINE,
-  R_POLYGON_MODE_FILL,
-  R_POLYGON_MODE_COUNT
+	R_POLYGON_MODE_UNINITIALIZED,
+	R_POLYGON_MODE_POINT,
+	R_POLYGON_MODE_LINE,
+	R_POLYGON_MODE_FILL,
+	R_POLYGON_MODE_COUNT
 };
 
 struct R_Texture_params
@@ -102,7 +102,7 @@ struct R_Pass_list
 	u32 num;
 };
 
-internal R_Pass *r_push_pass_list(Arena *arena, R_Pass_list *list, R_PASS_KIND kind)
+function R_Pass *r_push_pass_list(Arena *arena, R_Pass_list *list, R_PASS_KIND kind)
 {
 	R_Pass_node *node = push_struct(arena, R_Pass_node);
 	list->num ++;
@@ -119,7 +119,7 @@ internal R_Pass *r_push_pass_list(Arena *arena, R_Pass_list *list, R_PASS_KIND k
 	return pass;
 }
 
-internal R_Batch *r_push_batch_list(Arena *arena, R_Batch_list *list)
+function R_Batch *r_push_batch_list(Arena *arena, R_Batch_list *list)
 {
 	R_Batch *node = push_struct(arena, R_Batch);
 	list->num ++;
@@ -137,7 +137,7 @@ internal R_Batch *r_push_batch_list(Arena *arena, R_Batch_list *list)
 
 #define r_push_batch(arena,batch, type) (type*)r_push_batch_(arena, batch, sizeof(type))
 
-internal void *r_push_batch_(Arena *arena, R_Batch_list *list, u64 size)
+function void *r_push_batch_(Arena *arena, R_Batch_list *list, u64 size)
 {
 	R_Batch *batch = list->last;
 	

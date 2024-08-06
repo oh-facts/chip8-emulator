@@ -42,10 +42,10 @@ global TCXT tcxt;
 #define END_TIMED_BLOCK(ID)
 #endif
 
-internal void tcxt_init();
-internal void process_debug_counters();
+function void tcxt_init();
+function void process_debug_counters();
 
-internal Arena *tcxt_get_scratch(Arena **conflicts, u64 count);
+function Arena *tcxt_get_scratch(Arena **conflicts, u64 count);
 
 #define scratch_begin(conflicts, count) arena_temp_begin(tcxt_get_scratch(conflicts, count))
 #define scratch_end(scratch) arena_temp_end(scratch);

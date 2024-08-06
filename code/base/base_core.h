@@ -3,18 +3,6 @@
 #ifndef BASE_CORE_H
 #define BASE_CORE_H
 
-#include <stdint.h>
-#include <stdarg.h>
-#include <stddef.h>
-
-#if defined(_WIN32)
-#define OS_WIN32
-#elif defined (__linux__)
-#define OS_LINUX
-#elif defined(__APPLE__)
-#define OS_APPLE
-#endif
-
 #define DEFAULT_ALIGN sizeof(void *)
 
 #define ARRAY_LEN(arr) (sizeof((arr)) / sizeof((arr)[0]))
@@ -47,7 +35,7 @@ __builtin_trap();\
 #define Gigabytes(Value) (Megabytes(Value) * 1024)
 #define Terabytes(Value) (Gigabytes(Value) * 1024)
 
-#define internal static
+#define function static
 #define global static
 #define local_persist static
 
@@ -66,9 +54,9 @@ typedef double f64;
 
 typedef int32_t b32;
 
-internal b32 is_pow_of_2(size_t addr)
+function b32 is_pow_of_2(size_t addr)
 {
-  return (addr & (addr-1)) == 0;
+	return (addr & (addr-1)) == 0;
 }
 
 struct Arena
@@ -93,19 +81,19 @@ struct Arena
 
 struct Arena_temp
 {
-  Arena *arena;
-  size_t pos;
+	Arena *arena;
+	size_t pos;
 };
 
 #define push_struct(arena, type) (type*)_arena_alloc(arena, sizeof(type))
 #define push_array(arena,type,count) (type*)_arena_alloc(arena, sizeof(type) * count)
 
-internal void* _arena_alloc(Arena* arena, size_t size);
-internal Arena *arena_create(u64 cmt, u64 res, u64 align = DEFAULT_ALIGN);
-internal Arena *arena_create();
-internal Arena_temp arena_temp_begin(Arena *arena);
-internal void arena_temp_end(Arena_temp *temp);
-internal void mem_cpy(void *dst, void *src, size_t size);
+function void* _arena_alloc(Arena* arena, size_t size);
+function Arena *arena_create(u64 cmt, u64 res, u64 align = DEFAULT_ALIGN);
+function Arena *arena_create();
+function Arena_temp arena_temp_begin(Arena *arena);
+function void arena_temp_end(Arena_temp *temp);
+function void mem_cpy(void *dst, void *src, size_t size);
 
 #if defined OS_WIN32
 #define YK_API __declspec(dllexport)

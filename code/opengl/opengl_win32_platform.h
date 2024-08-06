@@ -184,7 +184,7 @@ global PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 global PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT;
 global PFNGLGENERATEMIPMAPPROC glGenerateMipmap;
 
-internal void opengl_load_functions()
+function void opengl_load_functions()
 {
   glClearBufferfv = (PFNGLCLEARBUFFERFVPROC)wglGetProcAddress("glClearBufferfv");
   

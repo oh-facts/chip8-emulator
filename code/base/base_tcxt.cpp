@@ -8,7 +8,7 @@ void tcxt_init()
 
 void process_debug_counters()
 {
-	for(i32 i = 0; i < ARRAY_LEN(tcxt.counters); i ++)
+	for(u32 i = 0; i < ARRAY_LEN(tcxt.counters); i ++)
 	{
 		debug_cycle_counter *counter = tcxt.counters + i;
 		debug_cycle_counter *counter_last = tcxt.counters_last + i;

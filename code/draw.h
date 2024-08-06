@@ -37,7 +37,7 @@ struct D_Bucket
 	D_Text_params default_text_params;
 };
 
-internal void d_push_proj_view(D_Bucket *bucket, m4f proj_view)
+function void d_push_proj_view(D_Bucket *bucket, m4f proj_view)
 {
 	D_Proj_view_node *node = push_struct(bucket->arena, D_Proj_view_node);
 	node->v = proj_view;
@@ -54,12 +54,12 @@ internal void d_push_proj_view(D_Bucket *bucket, m4f proj_view)
 	
 }
 
-internal void d_pop_proj_view(D_Bucket *bucket)
+function void d_pop_proj_view(D_Bucket *bucket)
 {
 	bucket->proj_view_top = bucket->proj_view_top->next;
 }
 
-internal R_Pass *d_pass_from_bucket(D_Bucket *bucket, R_PASS_KIND kind)
+function R_Pass *d_pass_from_bucket(D_Bucket *bucket, R_PASS_KIND kind)
 {
 	R_Pass_node *node = bucket->list.last;
 	R_Pass *pass = 0;
@@ -75,7 +75,7 @@ internal R_Pass *d_pass_from_bucket(D_Bucket *bucket, R_PASS_KIND kind)
 	return pass;
 }
 
-internal void d_draw_img(D_Bucket *bucket, v2f pos, v2f scale, v4f color, R_Handle tex)
+function void d_draw_img(D_Bucket *bucket, v2f pos, v2f scale, v4f color, R_Handle tex)
 {
 	R_Pass *pass = d_pass_from_bucket(bucket, R_PASS_KIND_UI);
 	R_Rect *rect = r_push_batch(bucket->arena, &pass->rect_pass.rects, R_Rect);
@@ -91,12 +91,12 @@ internal void d_draw_img(D_Bucket *bucket, v2f pos, v2f scale, v4f color, R_Hand
 	pass->rect_pass.proj_view = bucket->proj_view_top->v;
 }
 
-internal void d_draw_rect(D_Bucket *bucket, v2f pos, v2f scale, v4f color)
+function void d_draw_rect(D_Bucket *bucket, v2f pos, v2f scale, v4f color)
 {
 	d_draw_img(bucket, pos, scale, color, bucket->white_square);
 }
 
-internal void d_draw_text(D_Bucket *bucket, Str8 text, v2f pos, D_Text_params *p)
+function void d_draw_text(D_Bucket *bucket, Str8 text, v2f pos, D_Text_params *p)
 {
 	v2f text_pos = pos;
 	f32 width = 0;
@@ -134,15 +134,13 @@ internal void d_draw_text(D_Bucket *bucket, Str8 text, v2f pos, D_Text_params *p
 		
 		rect->tl.x = xpos;
 		rect->tl.y = ypos - (0.0504f - h);
-		//printf("%f\n", h);
+
 		rect->br.x = rect->tl.x + w;
 		rect->br.y = rect->tl.y - h;
 		
 		rect->tex = p->atlas_tex[(u32)c];
 		rect->color = p->color;
 		pass->rect_pass.proj_view = bucket->proj_view_top->v;
-		
-		//r_add_ui(list, ch.bmp_handle , (v2f){{xpos, ypos}}, (v2f){{w,h}} , p->color);
 	}
 	
 }

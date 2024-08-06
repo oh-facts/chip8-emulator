@@ -25,7 +25,7 @@ struct R_Opengl_state
 
 global R_Opengl_state r_opengl_state;
 
-internal void APIENTRY glDebugOutput(GLenum source, 
+function void APIENTRY glDebugOutput(GLenum source, 
 																		 GLenum type, 
 																		 unsigned int id, 
 																		 GLenum severity, 
@@ -34,14 +34,14 @@ internal void APIENTRY glDebugOutput(GLenum source,
 																		 const void *userParam);
 
 
-internal void check_compile_errors(GLuint shader, const char *type);
-internal void check_link_errors(GLuint shader, const char *type);
-internal GLuint r_opengl_make_shader_program(char *vertexShaderSource, char *fragmentShaderSource);
-internal GLuint r_opengl_make_buffer(size_t size);
+function void check_compile_errors(GLuint shader, const char *type);
+function void check_link_errors(GLuint shader, const char *type);
+function GLuint r_opengl_make_shader_program(char *vertexShaderSource, char *fragmentShaderSource);
+function GLuint r_opengl_make_buffer(size_t size);
 
-internal void r_opengl_init();
-internal R_Handle r_opengl_alloc_texture(void *data, i32 w, i32 h, i32 n, R_Texture_params *p);
-internal void r_opengl_submit(R_Pass_list *list, v2i win_size);
+function void r_opengl_init();
+function R_Handle r_opengl_alloc_texture(void *data, i32 w, i32 h, i32 n, R_Texture_params *p);
+function void r_opengl_submit(R_Pass_list *list, v2i win_size);
 
 global u32 sprite_draw_indices[] = {
   0,1,3,

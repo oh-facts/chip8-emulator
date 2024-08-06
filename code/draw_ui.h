@@ -3,7 +3,7 @@
 #ifndef DRAW_UI_H
 #define DRAW_UI_H
 
-internal void d_draw_ui(D_Bucket *draw, UI_Widget *root)
+function void d_draw_ui(D_Bucket *draw, UI_Widget *root)
 {
 	root->pos.x = root->computed_rel_position[0] + root->fixed_position.x;
 	root->pos.y = root->computed_rel_position[1] + root->fixed_position.y;

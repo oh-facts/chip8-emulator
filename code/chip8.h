@@ -31,8 +31,8 @@ global u8 chip8_fontset[80] =
 
 enum ChipStatus
 {
-	ChipStatus_Null,
 	ChipStatus_Off,
+	ChipStatus_Cold,
 	ChipStatus_Hot,
 	ChipStatus_Active,
 	ChipStatus_COUNT,
@@ -66,10 +66,10 @@ struct Chip8
 
 #define CHIP_8_PERM_SIZE offsetof(struct Chip8, please_dont_move_this)
 
-internal b32 is_chip_key_down(Input *input, u8 key);
-internal u8 *chip_get_vx(Chip8 *chip);
-internal u8 *chip_get_vy(Chip8 *chip);
+function b32 is_chip_key_down(Input *input, u8 key);
+function u8 *chip_get_vx(Chip8 *chip);
+function u8 *chip_get_vy(Chip8 *chip);
 
-internal void chip_reload_rom(Chip8 *chip);
-internal void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta);
+function void chip_reload_rom(Chip8 *chip);
+function void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, Input *input, f32 delta);
 #endif //CHIP8_H

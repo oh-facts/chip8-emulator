@@ -43,13 +43,13 @@ struct Input
   i32 scroll;
 };
 
-internal b32 input_is_key_tapped(Input *state, u32 key);
-internal b32 input_is_key_held(Input *state, u32 key);
-internal b32 input_is_click(Input* state, MOUSE_BUTTON button);
-internal b32 input_is_mouse_held(Input* state, MOUSE_BUTTON button);
+function b32 input_is_key_tapped(Input *state, u32 key);
+function b32 input_is_key_held(Input *state, u32 key);
+function b32 input_is_click(Input* state, MOUSE_BUTTON button);
+function b32 input_is_mouse_held(Input* state, MOUSE_BUTTON button);
 
-internal v2i input_get_mouse_mv(Input *state);
+function v2i input_get_mouse_mv(Input *state);
 
-internal void input_update(Input *state);
+function void input_update(Input *state);
 
 #endif //BASE_INPUT_H

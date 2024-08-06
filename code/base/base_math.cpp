@@ -17,20 +17,20 @@ b32 operator==(v2i a, v2i b)
 
 v2i operator-(v2i a, v2i b)
 {
-  return (v2i)
-  {
-    .x = a.x - b.x,
-    .y = a.y - b.y
-  };
+  v2i out = {};
+  out.x = a.x - b.x,
+  out.y = a.y - b.y;
+
+  return out;
 }
 
 v2i operator+(v2i a, v2i b)
 {
-  return (v2i)
-  {
-    .x = a.x + b.x,
-    .y = a.y + b.y
-  };
+  v2i out = {};
+  out.x = a.x + b.x,
+  out.y = a.y + b.y;
+
+  return out;
 }
 
 void operator+=(v2i &a, v2i b)

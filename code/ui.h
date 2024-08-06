@@ -149,7 +149,7 @@ struct text_extent
 	v2f br;
 };
 
-internal text_extent ui_text_spacing_stats(Glyph *atlas, Str8 text, f32 scale)
+function text_extent ui_text_spacing_stats(Glyph *atlas, Str8 text, f32 scale)
 {
 	text_extent out = {};
 	
@@ -177,7 +177,7 @@ internal text_extent ui_text_spacing_stats(Glyph *atlas, Str8 text, f32 scale)
 	return out;
 }
 
-internal b32 ui_signal(v2f pos, v2f size, v2f mpos)
+function b32 ui_signal(v2f pos, v2f size, v2f mpos)
 {
 	b32 hot = 0;
 	v2f tl = {};
@@ -195,7 +195,7 @@ internal b32 ui_signal(v2f pos, v2f size, v2f mpos)
 	return hot;
 }
 
-internal UI_Widget *ui_alloc_widget(UI_Context *cxt)
+function UI_Widget *ui_alloc_widget(UI_Context *cxt)
 {
 	UI_Widget *out = cxt->widget_free_list;
 	
@@ -212,14 +212,14 @@ internal UI_Widget *ui_alloc_widget(UI_Context *cxt)
 	return out;
 }
 
-internal void ui_free_widget(UI_Context *cxt, UI_Widget *node)
+function void ui_free_widget(UI_Context *cxt, UI_Widget *node)
 {
 	node->next = cxt->widget_free_list;
 	cxt->widget_free_list = node;
 }
 
 #define ui_make_alloc_node(Name, name) \
-internal UI_##Name##_node *ui_alloc_##name##_node(UI_Context *cxt) \
+function UI_##Name##_node *ui_alloc_##name##_node(UI_Context *cxt) \
 { \
 UI_##Name##_node *node = cxt->name##_stack.free;\
 if(node)\
@@ -235,7 +235,7 @@ return node;\
 }
 
 #define ui_make_free_node(Name, name) \
-internal void ui_free_##name##_node(UI_Context *cxt, UI_##Name##_node *node)\
+function void ui_free_##name##_node(UI_Context *cxt, UI_##Name##_node *node)\
 {\
 node->next = cxt->name##_stack.free;\
 cxt->name##_stack.free = node;\
@@ -270,7 +270,7 @@ ui_make_free_node(SizeKind_y, size_kind_y)
 
 
 #define ui_make_push_style(Name, name, Type) \
-internal void ui_push_##name(UI_Context *cxt, Type val) { \
+function void ui_push_##name(UI_Context *cxt, Type val) { \
 UI_##Name##_node *node = ui_alloc_##name##_node(cxt);\
 node->v = val; \
 if (!cxt->name##_stack.top) { \
@@ -282,7 +282,7 @@ cxt->name##_stack.top = node; \
 }
 
 #define ui_make_set_next_style(Name, name, Type) \
-internal void ui_set_next_##name(UI_Context *cxt, Type val) { \
+function void ui_set_next_##name(UI_Context *cxt, Type val) { \
 UI_##Name##_node *node = ui_alloc_##name##_node(cxt); \
 node->v = val; \
 if (!cxt->name##_stack.top) { \
@@ -295,7 +295,7 @@ cxt->name##_stack.auto_pop = 1;\
 }
 
 #define ui_make_pop_style(Name, name) \
-internal void ui_pop_##name(UI_Context *cxt) { \
+function void ui_pop_##name(UI_Context *cxt) { \
 UI_##Name##_node *pop = cxt->name##_stack.top;\
 cxt->name##_stack.top = cxt->name##_stack.top->next;\
 ui_free_##name##_node(cxt, pop);\
@@ -336,7 +336,7 @@ ui_push_size_kind_y(cxt, kind);
 #define ui_pop_size_kind(cxt) ui_pop_size_kind_x(cxt); \
 ui_pop_size_kind_y(cxt);
 
-internal UI_Context *ui_alloc_cxt()
+function UI_Context *ui_alloc_cxt()
 {
 	Arena *arena = arena_create();
 	
@@ -374,7 +374,7 @@ hash(Str8 str)
 	return hash;
 }
 
-internal UI_Widget *ui_widget_from_hash(UI_Context *cxt, u64 hash)
+function UI_Widget *ui_widget_from_hash(UI_Context *cxt, u64 hash)
 {
 	UI_Widget *widget = 0;
 	
@@ -395,7 +395,7 @@ internal UI_Widget *ui_widget_from_hash(UI_Context *cxt, u64 hash)
 	return widget;
 }
 
-internal UI_Widget *ui_make_widget(UI_Context *cxt, Str8 text)
+function UI_Widget *ui_make_widget(UI_Context *cxt, Str8 text)
 {
 	u64 text_hash = hash(text);
 	
@@ -527,7 +527,7 @@ internal UI_Widget *ui_make_widget(UI_Context *cxt, Str8 text)
 	return widget;
 }
 
-internal UI_Signal ui_begin_rowf(UI_Context *cxt, char *fmt, ...)
+function UI_Signal ui_begin_rowf(UI_Context *cxt, char *fmt, ...)
 {
 	Arena_temp temp = scratch_begin(0,0);
 	va_list args;
@@ -551,12 +551,12 @@ internal UI_Signal ui_begin_rowf(UI_Context *cxt, char *fmt, ...)
 	return out;
 }
 
-internal void ui_end_row(UI_Context *cxt)
+function void ui_end_row(UI_Context *cxt)
 {
 	ui_pop_parent(cxt);
 }
 
-internal UI_Signal ui_begin_colf(UI_Context *cxt, char *fmt, ...)
+function UI_Signal ui_begin_colf(UI_Context *cxt, char *fmt, ...)
 {
 	Arena_temp temp = scratch_begin(0,0);
 	va_list args;
@@ -580,12 +580,12 @@ internal UI_Signal ui_begin_colf(UI_Context *cxt, char *fmt, ...)
 	return out;
 }
 
-internal void ui_end_col(UI_Context *cxt)
+function void ui_end_col(UI_Context *cxt)
 {
 	ui_pop_parent(cxt);
 }
 
-internal UI_Signal ui_label(UI_Context *cxt, Str8 text)
+function UI_Signal ui_label(UI_Context *cxt, Str8 text)
 {
 	UI_Widget *widget = ui_make_widget(cxt, text);
 	widget->flags = UI_Flags_has_text;
@@ -601,7 +601,7 @@ internal UI_Signal ui_label(UI_Context *cxt, Str8 text)
 	return out;
 }
 
-internal UI_Signal ui_labelf(UI_Context *cxt, char *fmt, ...)
+function UI_Signal ui_labelf(UI_Context *cxt, char *fmt, ...)
 {
 	Arena_temp temp = scratch_begin(0,0);
 	va_list args;
@@ -614,7 +614,7 @@ internal UI_Signal ui_labelf(UI_Context *cxt, char *fmt, ...)
 	return out;
 }
 
-internal UI_Signal ui_spacer(UI_Context *cxt, Str8 text)
+function UI_Signal ui_spacer(UI_Context *cxt, Str8 text)
 {
 	UI_Widget *widget = ui_make_widget(cxt, text);
 	
@@ -629,7 +629,7 @@ internal UI_Signal ui_spacer(UI_Context *cxt, Str8 text)
 	return out;
 }
 
-internal UI_Signal ui_spacerf(UI_Context *cxt, char *fmt, ...)
+function UI_Signal ui_spacerf(UI_Context *cxt, char *fmt, ...)
 {
 	Arena_temp temp = scratch_begin(0,0);
 	va_list args;
@@ -645,7 +645,10 @@ internal UI_Signal ui_spacerf(UI_Context *cxt, char *fmt, ...)
 #define ui_rowf(v,...) UI_DeferLoop(ui_begin_rowf(v,__VA_ARGS__), ui_end_row(v))
 #define ui_colf(v,...) UI_DeferLoop(ui_begin_colf(v,__VA_ARGS__), ui_end_col(v))
 
-internal void ui_layout_fixed_size(UI_Widget *root, Axis2 axis)
+#define ui_fixed_pos(cxt, v) UI_DeferLoop(ui_push_fixed_pos(cxt, v), ui_pop_fixed_pos(cxt))
+#define ui_text_color(cxt, v) UI_DeferLoop(ui_push_text_color(cxt, v), ui_pop_text_color(cxt))
+
+function void ui_layout_fixed_size(UI_Widget *root, Axis2 axis)
 {
 	for(UI_Widget *child = root->first; child; child = child->next)
 	{
@@ -665,7 +668,7 @@ internal void ui_layout_fixed_size(UI_Widget *root, Axis2 axis)
 	}
 }
 
-internal void ui_layout_upward_dependent(UI_Widget *root, Axis2 axis)
+function void ui_layout_upward_dependent(UI_Widget *root, Axis2 axis)
 {
 	if(root->pref_size[axis].kind == UI_SizeKind_PercentOfParent)
 	{
@@ -681,7 +684,7 @@ internal void ui_layout_upward_dependent(UI_Widget *root, Axis2 axis)
 	}
 }
 
-internal void ui_layout_downward_dependent(UI_Widget *root, Axis2 axis)
+function void ui_layout_downward_dependent(UI_Widget *root, Axis2 axis)
 {
 	for(UI_Widget *child = root->first; child; child = child->next)
 	{
@@ -708,7 +711,7 @@ internal void ui_layout_downward_dependent(UI_Widget *root, Axis2 axis)
 }
 
 // pre order
-internal void ui_layout_pos(UI_Widget *root)
+function void ui_layout_pos(UI_Widget *root)
 {
 	if(root->parent)
 	{
@@ -739,7 +742,7 @@ internal void ui_layout_pos(UI_Widget *root)
 }
 
 // post order dfs
-internal void ui_print_nodes_post_order(UI_Widget *root, i32 depth)
+function void ui_print_nodes_post_order(UI_Widget *root, i32 depth)
 {
 	for(UI_Widget *child = root->first; child; child = child->next)
 	{
@@ -754,7 +757,7 @@ internal void ui_print_nodes_post_order(UI_Widget *root, i32 depth)
 	printf("%s [%.2f , %.2f] [%.2f , %.2f] \n", root->text.c, root->computed_size[0], root->computed_size[1], root->computed_rel_position[0], root->computed_rel_position[1]);
 }
 
-internal void ui_print_nodes_pre_order(UI_Widget *root, i32 depth)
+function void ui_print_nodes_pre_order(UI_Widget *root, i32 depth)
 {
 	
 	for(i32 i = 0; i < depth; ++i) 
@@ -770,7 +773,7 @@ internal void ui_print_nodes_pre_order(UI_Widget *root, i32 depth)
 	}
 }
 
-internal void ui_layout(UI_Widget *root)
+function void ui_layout(UI_Widget *root)
 {
 	for(Axis2 axis = (Axis2)0; axis < Axis2_COUNT; axis = (Axis2)(axis + 1))
 	{
@@ -783,7 +786,7 @@ internal void ui_layout(UI_Widget *root)
 	//printf("\n");
 }
 
-internal void ui_begin(UI_Context *cxt)
+function void ui_begin(UI_Context *cxt)
 {
 	UI_Widget *root = ui_make_widget(cxt, str8_lit("rootere"));
 	ui_push_parent(cxt, root);
@@ -791,11 +794,11 @@ internal void ui_begin(UI_Context *cxt)
 	cxt->str_arena->used = ARENA_HEADER_SIZE;
 }
 
-internal void ui_end(UI_Context *cxt)
+function void ui_end(UI_Context *cxt)
 {
 	ui_pop_parent(cxt);
 	
-	for(i32 i = 0; i < cxt->hash_table_size; i++)
+	for(u32 i = 0; i < cxt->hash_table_size; i++)
 	{
 		UI_Widget *first_hash = (cxt->hash_slots + i)->first;
 		if(!first_hash)
@@ -843,49 +846,4 @@ internal void ui_end(UI_Context *cxt)
 	}
 	//printf("\n");
 }
-
-/*
-// calculate sizes
-	UI_Widget *stack[1024];
-	int stack_size = 0;
-	stack[stack_size++] = root;
-	
-	while (stack_size > 0)
-	{
-		UI_Widget *cur = stack[--stack_size];
-		
-		UI_Widget *child = cur->first;
-		
-		while (child)
-		{
-			if (child->prev)
-			{
-				if (cur->child_layout_axis == Axis2_X)
-				{
-					child->computed_rel_position[Axis2_X] = child->prev->computed_rel_position[Axis2_X] + child->prev->pref_size[Axis2_X].value;
-				}
-				else if (cur->child_layout_axis == Axis2_Y)
-				{
-					// down is -ve
-					child->computed_rel_position[Axis2_Y] = child->prev->computed_rel_position[Axis2_Y] - child->prev->pref_size[Axis2_Y].value;
-				}
-				
-			}
-			
-			//child->pos.x = child->computed_rel_position[Axis2_X];
-			//child->pos.y = child->computed_rel_position[Axis2_Y];
-			
-			child->pos.x = cur->computed_rel_position[Axis2_X] + child->computed_rel_position[Axis2_X];
-			child->pos.y = cur->computed_rel_position[Axis2_Y] + child->computed_rel_position[Axis2_Y];
-			
-			child->size.x = child->pref_size[Axis2_X].value;
-			child->size.y = child->pref_size[Axis2_Y].value;
-			
-			stack[stack_size++] = child;
-			child = child->next;
-		}
-	}
-	
-*/
-
 #endif //UI_H

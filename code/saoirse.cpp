@@ -1,3 +1,4 @@
+#include "base/base_context_cracking.h"
 #include "saoirse_platform.h"
 
 extern "C"
@@ -33,6 +34,12 @@ void update_and_render(S_Platform * pf, Input *input, f32 delta)
 			R_TEXTURE_FILTER_LINEAR,
 			R_TEXTURE_FILTER_LINEAR,
 			R_TEXTURE_WRAP_REPEAT
+		};
+
+		R_Texture_params pixel_params = {
+			R_TEXTURE_FILTER_NEAREST,
+			R_TEXTURE_FILTER_NEAREST,
+			R_TEXTURE_WRAP_CLAMP_TO_BORDER
 		};
 		
 		char codepoints[] =
@@ -75,12 +82,13 @@ void update_and_render(S_Platform * pf, Input *input, f32 delta)
 		*white_square = 0xFFFFFFFF;
 		state->white_square = r_alloc_texture(white_square, 1, 1, 4, &tiled_params);
 
+		Str8 face_path = str8_join(state->trans, pf->app_dir, str8_lit("../data/face.png"));
+		Bitmap face_bmp = bitmap(face_path);
+		state->face = r_alloc_texture(face_bmp.data, face_bmp.w, face_bmp.h, face_bmp.n, &pixel_params);
 		state->cxt = ui_alloc_cxt();
 		
 		arena_temp_end(&temp);
 	}
-	
-	g_input = input;
 
 	State *state = (State*)pf->memory;
 	
@@ -117,10 +125,35 @@ void update_and_render(S_Platform * pf, Input *input, f32 delta)
 	f32 scale = 4;
 	
 	d_draw_rect(&state->draw, v2f{{-scale * 0.5f, scale * 0.5f}}, v2f{{scale, scale}}, CHIP8_COLOR_BG_BG);
-	chip_run(&state->chip, state->cxt, &state->draw, delta);
+
+	ui_begin(state->cxt);
+	chip_run(&state->chip, state->cxt, &state->draw, input, delta);
+
+	ui_text_color(state->cxt, CHIP8_COLOR_TEXT)
+    ui_fixed_pos(state->cxt, (v2f{{-1.3, -0.8}}))
+	ui_colf(state->cxt, "diagnostics")
+	{
+		local_persist f32 update_timer = 0;
+		local_persist f32 cc = 0;
+		update_timer += delta;
+		if(update_timer > 0.3f)
+		{
+			cc = tcxt.counters_last[DEBUG_CYCLE_COUNTER_UPDATE_AND_RENDER].cycle_count * 0.001f;
+			update_timer = 0;
+		}
+		ui_push_size_kind(state->cxt, UI_SizeKind_TextContent);
+		ui_labelf(state->cxt, "cc : %.f K", cc);
+		ui_labelf(state->cxt, "cmt: %.1f MB", pf->cmt * 0.000001f);
+		ui_labelf(state->cxt, "res: %.1f GB", pf->res * 0.000000001f);
+		ui_pop_size_kind(state->cxt);
+	}
+
+	ui_end(state->cxt);
+
 	ui_layout(state->cxt->root);
 	
 	d_draw_ui(&state->draw, state->cxt->root);
+	d_draw_img(&state->draw, v2f{{1.3,-0.6}}, v2f{{0.4f, 0.4f}}, D_COLOR_WHITE, state->face);
 	d_pop_proj_view(&state->draw);
 	
 	r_submit(&state->draw.list, pf->win_size);
