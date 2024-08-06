@@ -39,7 +39,7 @@
 #elif defined(OS_LINUX)
 #define GAME_DLL "libyk.so"
 #elif defined(OS_APPLE)
-#define GAME_DLL "libyk2.dylib"
+#define GAME_DLL "libyk.dylib"
 #endif
 
 struct S_Window
