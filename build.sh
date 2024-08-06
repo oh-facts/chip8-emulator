@@ -21,7 +21,7 @@ release_build="-O3"
 
 [ ! -d "out" ] && mkdir "out"
 
-[ "$platform" == "1" ] && clang++ $common_flags $build_type code/sdl_main.cpp -lSDL2 -o "out/platform" && echo "compiled platform"
+[ "$platform" == "1" ] && clang++ $common_flags $build_type code/main.cpp -lSDL3 -I./code/ -o "out/platform" && echo "compiled platform"
 
 [ "$app" == "1" ] && clang++ $common_flags $build_type -fPIC -shared code/saoirse.cpp -o "out/libyk.so" && echo "compiled app"
 

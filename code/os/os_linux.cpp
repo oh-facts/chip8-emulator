@@ -50,3 +50,8 @@ internal Str8 os_linux_get_app_dir(Arena *arena)
 
     return out;
 }
+
+internal u64 os_linux_get_page_size()
+{
+    return getpagesize();
+}

@@ -52,9 +52,9 @@ struct R_Batch
 {
 	R_Batch *next;
 	size_t size;
-  u8 *base;
-  size_t used;
-  u32 count;
+	u8 *base;
+	size_t used;
+	u32 count;
 };
 
 struct R_Batch_list

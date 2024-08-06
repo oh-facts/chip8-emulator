@@ -26,6 +26,11 @@ Following arguments can be passed
 
 Binaries built in `out/`
 
+cmake -S ~/deps/SDL -B ~/deps/SDL/build
+cmake --build ~/deps/SDL/build
+sudo cmake --install ~/deps/SDL/build --prefix /usr/local
+sudo ldconfig
+
 ## Credits
 
 color palette: https://lospec.com/palette-list/velvet-cherry-gb

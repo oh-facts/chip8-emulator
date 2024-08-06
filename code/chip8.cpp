@@ -553,8 +553,9 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 	{
 		ui_push_size_kind(cxt, UI_SizeKind_TextContent);
 		
-		if(ui_labelf(cxt, "Load Rom").active)
+		if(ui_labelf(cxt, "Load Rom").hot)
 		{
+			printf("hot\n");
 			os_open_file_dialog(&chip->dialog_data);
 		}
 		
