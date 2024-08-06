@@ -138,13 +138,20 @@ internal void write_file(const char *filepath, FILE_TYPE type, void *data, size_
 	
 }
 
+struct File_dialog_data
+{
+	Arena *arena;
+	b32 completed;
+	Str8 path;
+};
+
 typedef void *(*os_reserve_fn)(u64 size);
 typedef b32 (*os_commit_fn)(void *ptr, u64 size);
 typedef void (*os_decommit_fn)(void *ptr, u64 size);
 typedef void (*os_release_fn)(void *ptr, u64 size);
 typedef u64 (*os_get_page_size_fn)();
 typedef Str8 (*os_get_app_dir_fn)(Arena *arena);
-typedef Str8 (*os_open_file_dialog_fn)(Arena *arena);
+typedef void (*os_open_file_dialog_fn)(File_dialog_data *data);
 
 global Input *g_input;
 global os_reserve_fn os_reserve;

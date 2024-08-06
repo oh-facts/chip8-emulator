@@ -40,7 +40,9 @@ enum ChipStatus
 
 struct Chip8
 {
+	File_dialog_data dialog_data;
 	char rom_path[256];
+	u8 please_dont_move_this;
 	ChipStatus status;
 	u16 opcode;
 	
@@ -62,11 +64,12 @@ struct Chip8
 	u8 display[64 * 32];
 };
 
+#define CHIP_8_PERM_SIZE offsetof(struct Chip8, please_dont_move_this)
+
 internal b32 is_chip_key_down(Input *input, u8 key);
 internal u8 *chip_get_vx(Chip8 *chip);
 internal u8 *chip_get_vy(Chip8 *chip);
 
-internal void chip_try_load_rom(Chip8 *chip);
 internal void chip_reload_rom(Chip8 *chip);
 internal void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta);
 #endif //CHIP8_H

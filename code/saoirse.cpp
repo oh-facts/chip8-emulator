@@ -50,7 +50,7 @@ void update_and_render(S_Platform * pf, Input *input, f32 delta)
 		};
 		
 		Arena_temp temp = arena_temp_begin(state->trans);
-		Str8 font_path = push_str8f(state->trans,"%s../data/delius.ttf",pf->app_dir.c);
+		Str8 font_path = str8_join(state->trans, pf->app_dir, str8_lit("../data/delius.ttf"));
 		Glyph *temp_font = make_bmp_font(font_path.c, codepoints, ARRAY_LEN(codepoints), state->trans);
 		
 		for(u32 i = 0; i < ARRAY_LEN(codepoints); i ++)

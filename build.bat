@@ -23,10 +23,10 @@ if "%debug%" == "1" echo [debug] && set build_type=%debug_build%
 if "%release%" == "1" echo [release] && set build_type=%release_build%
 
 if not exist out mkdir out 
-
+if not exist out\SDL3 xcopy /s /y data\SDL3.dll out
 if "%metacr%" == "1" clang "%common_c_flags%" code/cpp.c -o out/meta.exe && .\out\meta.exe > code\meta.h && echo [generating code]
 
-if "%platform%" == "1" echo [platform] && clang++ "%common_flags%" "%build_type%" -luser32 -lkernel32 -lgdi32 -lcomdlg32 -lopengl32 code/main.cpp -o out/platform.exe
+if "%platform%" == "1" echo [platform] && clang++ "%common_flags%" "%build_type%" -luser32 -lkernel32 -lgdi32 -lcomdlg32 -lopengl32 -ldata/SDL3 -I./code/ code/main.cpp -o out/platform.exe
 
 if %errorlevel% neq 0 echo platform compilation failed && exit /b
 

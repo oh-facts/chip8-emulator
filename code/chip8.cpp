@@ -6,22 +6,22 @@ b32 is_chip_key_down(Input *input, u8 key)
 	if(!initialized)
 	{
 		initialized = 1;
-		key_table[0x0] = 'X';
+		key_table[0x0] = 'x';
 		key_table[0x1] = '1';
 		key_table[0x2] = '2';
 		key_table[0x3] = '3';
-		key_table[0x4] = 'Q';
-		key_table[0x5] = 'W';
-		key_table[0x6] = 'E';
-		key_table[0x7] = 'A';
-		key_table[0x8] = 'S';
-		key_table[0x9] = 'D';
-		key_table[0xA] = 'Z';
-		key_table[0xB] = 'C';
+		key_table[0x4] = 'q';
+		key_table[0x5] = 'w';
+		key_table[0x6] = 'e';
+		key_table[0x7] = 'a';
+		key_table[0x8] = 's';
+		key_table[0x9] = 'd';
+		key_table[0xA] = 'z';
+		key_table[0xB] = 'c';
 		key_table[0xC] = '4';
-		key_table[0xD] = 'R';
-		key_table[0xE] = 'F';
-		key_table[0xF] = 'V';
+		key_table[0xD] = 'r';
+		key_table[0xE] = 'f';
+		key_table[0xF] = 'v';
 	}
 	
 	return input->keys[key_table[key]];
@@ -44,27 +44,10 @@ u8 *chip_get_vy(Chip8 *chip)
 	return out;
 }
 
-void chip_try_load_rom(Chip8 *chip)
-{
-	Arena_temp temp = scratch_begin(0,0);
-
-	Str8 temp_str = os_open_file_dialog(temp.arena);
-	
-	if(temp_str.len > 0)
-	{
-		memset(chip, 0, sizeof(Chip8));
-		mem_cpy(chip->rom_path, temp_str.c, temp_str.len);
-		srand(time(0));
-		chip->status = ChipStatus_Off;
-	}
-
-	scratch_end(&temp);
-}
-
 void chip_reload_rom(Chip8 *chip)
 {
-	u8 *start = (((u8*)chip) + 256);
-	memset(start, 0, sizeof(Chip8) - 256);
+	u8 *start = (((u8*)chip) + CHIP_8_PERM_SIZE);
+	memset(start, 0, sizeof(Chip8) - CHIP_8_PERM_SIZE);
 	srand(time(0));
 	chip->status = ChipStatus_Off;
 }
@@ -547,6 +530,20 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 		}break;
 		
 	}
+
+	if(chip->dialog_data.completed)
+	{
+		if(chip->dialog_data.path.len > 0)
+		{
+			u8 *start = (((u8*)chip) + CHIP_8_PERM_SIZE);
+			memset(start, 0, sizeof(Chip8) - CHIP_8_PERM_SIZE);
+			mem_cpy(chip->rom_path, chip->dialog_data.path.c, chip->dialog_data.path.len);
+			srand(time(0));
+			chip->status = ChipStatus_Off;
+		}
+
+		chip->dialog_data.completed = 0;
+	}
 	
 	ui_begin(cxt);
 	
@@ -558,7 +555,7 @@ void chip_run(Chip8 *chip, UI_Context *cxt, D_Bucket *draw, f32 delta)
 		
 		if(ui_labelf(cxt, "Load Rom").active)
 		{
-			chip_try_load_rom(chip);
+			os_open_file_dialog(&chip->dialog_data);
 		}
 		
 		if(ui_labelf(cxt, "%s", chip->rom_path).active)

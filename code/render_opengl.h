@@ -41,7 +41,7 @@ internal GLuint r_opengl_make_buffer(size_t size);
 
 internal void r_opengl_init();
 internal R_Handle r_opengl_alloc_texture(void *data, i32 w, i32 h, i32 n, R_Texture_params *p);
-internal void r_opengl_submit(R_Pass_list *list);
+internal void r_opengl_submit(R_Pass_list *list, v2i win_size);
 
 global u32 sprite_draw_indices[] = {
   0,1,3,
